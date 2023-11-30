@@ -15,23 +15,14 @@ function Market() {
   useEffect(() => {
     getFetch();
   }, []);
+  
+  function changeTheme() {
+    document.body.classList.toggle("dark")
+  }
 
   async function getFetch() {
-    const data = await fetch("https://northwind.vercel.app/api/products");
+    const data = await fetch("https://fakestoreapi.com/products");
     const res = await data.json();
-
-    
-    res.map(x => {
-      let arr = basket.map(y=>{if(x.id === y.id)  return y.id})
-      if (arr.length === 0) {
-        x.theme = "fa-regular"
-      }
-      else{
-        console.log(arr.id);
-        if (arr.includes(x.id)) x.theme = "fa-solid"
-        else x.theme = "fa-regular"
-      }
-    })  
     setFetchData(res);
   }
 
@@ -48,27 +39,27 @@ function Market() {
   }
 
     function allremoveBasket(newItem){
-      newItem.theme = "fa-regular"
+        newItem.theme = "fa-regular"
         setBasket(basket.filter((x) => x !== newItem));
     }
 
     function handleHeartClick(x) {
       addBasket(x)
-
-      
     }
 
   return (
     <div className="container">
       <div className="basket">
-        <h3>Favorite</h3>
+        <h3 style={{display: "inline-block" , margin: "5px"}}>Favorite</h3>
         <ul className="basketwrapper">
         {basket.map((x) => {
           
           return (
             <ul className="card" key={x.id}>
-              <li>{x.id}</li>
-              <li>{x.name}</li>
+                <div className="img">
+                  <img src={x.image} alt="" />
+                </div>
+              <li>{x.title}</li>
               <button className="close" onClick={() => allremoveBasket(x)}><FontAwesomeIcon icon="fa-solid fa-xmark" /></button>
             </ul>
           );
@@ -78,14 +69,30 @@ function Market() {
       </div>
       <hr />
       <div className="market">
-        <h3>market</h3>
+        <div style={{display:"flex",justifyContent:"space-between"}}>
+          <h3>market</h3>
+          <button onClick={changeTheme}>Change Theme</button>
+        </div>
         <ul className="wrapper">
           {fetchData.map((x) => {
+
+            let arr = basket.map(y=>{if(x.id === y.id)  return y.id})
+            if (arr.length === 0) {
+              x.theme = "fa-regular"
+            }
+            if (arr.includes(x.id)) x.theme = "fa-solid"
+            else x.theme = "fa-regular"
+
             return (
               <ul className="card" key={x.id}>
-                <li>{x.id}</li>
-                <li>{x.name}</li>
-                <button className="heart" onClick={()=>handleHeartClick(x)}><FontAwesomeIcon className="heart" icon={`${x.theme} fa-heart`} /></button>
+                <div className="img">
+                  <img src={x.image} alt="" />
+                </div>
+                <li>{x.title}</li>
+                <li>{x.price}</li>
+                <li>{x.description.slice(0,100)}...</li>
+
+                <button className="heart" onClick={()=>handleHeartClick(x)}><FontAwesomeIcon icon={`${x.theme} fa-heart`} /></button>
               </ul>
             );
           })}

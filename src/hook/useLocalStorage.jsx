@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import {useState } from 'react'
 
 function useLocalStorage(key,val) {
     const [data, setData] = useState(localStorage.getItem(key) ? JSON.parse(localStorage.getItem(key)) : val)
